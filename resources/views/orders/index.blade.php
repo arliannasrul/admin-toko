@@ -126,7 +126,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="empty">Belum ada pesanan masuk. Silakan buat simulasi pesanan!</td>
+                        <td colspan="7" class="empty">Belum ada pesanan masuk dari e-commerce.</td>
                     </tr>
                 @endforelse
             </tbody>

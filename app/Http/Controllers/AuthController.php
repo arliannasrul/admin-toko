@@ -60,7 +60,7 @@ class AuthController extends Controller
                 'name' => $googleUser->getName(),
                 'google_id' => $googleUser->getId(),
                 'avatar' => $googleUser->getAvatar(),
-                'role' => ($isFirstUser || $googleUser->getEmail() === 'arliannasrul@gmail.com') ? 'super_admin' : 'warehouse_staff',
+                'role' => ($isFirstUser || $googleUser->getEmail() === 'arliannasrul@gmail.com') ? 'super_admin' : 'guest',
             ]);
         } else {
             $updateData = [

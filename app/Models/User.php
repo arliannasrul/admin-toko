@@ -23,6 +23,7 @@ class User extends Authenticatable
         'avatar',
         'password',
         'role',
+        'admin_request_status',
     ];
 
     /**

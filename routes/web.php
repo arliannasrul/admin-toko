@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ApiController;
 
 // Auth Routes (Guest Only)
 Route::middleware('guest')->group(function () {
@@ -20,7 +21,7 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Protected Inventory, Order, and CRM Routes (Auth Only)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'block.guest.write'])->group(function () {
     // Open Access to All Authenticated Roles
     Route::get('/', [InventoryController::class, 'dashboard'])->name('dashboard');
     Route::get('/items', [InventoryController::class, 'items'])->name('items.index');
@@ -66,11 +67,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
         Route::post('/users/{id}/role', [UserManagementController::class, 'updateRole'])->name('users.updateRole');
     });
+
+    // Guest Apply Route
+    Route::post('/apply-admin', [UserManagementController::class, 'applyAdmin'])->name('users.applyAdmin');
 });
 
 // API endpoints for E-commerce Microservice (Public / Tokenless / Simple cross-origin)
 Route::prefix('api/ecommerce')->group(function () {
-    Route::get('/products', [\App\Http\Controllers\ApiController::class, 'getProducts']);
-    Route::post('/checkout', [\App\Http\Controllers\ApiController::class, 'placeOrder']);
-    Route::get('/tracking/{order_number}', [\App\Http\Controllers\ApiController::class, 'trackOrder']);
+    Route::get('/products', [ApiController::class, 'getProducts']);
+    Route::post('/checkout', [ApiController::class, 'placeOrder']);
+    Route::get('/tracking/{order_number}', [ApiController::class, 'trackOrder']);
 });

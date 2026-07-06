@@ -26,6 +26,15 @@ class RoleMiddleware
             return $next($request);
         }
 
+        // Guests can view all pages/features in a read-only state
+        if ($user->role === 'guest' && ($request->isMethod('GET') || $request->isMethod('HEAD'))) {
+            return $next($request);
+        }
+
+        if ($user->role === 'guest') {
+            abort(403, 'Akses ditolak. Sebagai Guest, Anda tidak memiliki izin untuk melakukan tindakan/perubahan data pada halaman ini.');
+        }
+
         if (in_array($user->role, $roles)) {
             return $next($request);
         }
