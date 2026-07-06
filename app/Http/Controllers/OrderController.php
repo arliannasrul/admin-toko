@@ -32,7 +32,7 @@ class OrderController extends Controller
             $query->where('status', $status);
         }
 
-        $orders = $query->latest()->get();
+        $orders = $query->latest()->paginate(5)->withQueryString();
 
         // Penghitungan jumlah untuk badge
         $counts = [

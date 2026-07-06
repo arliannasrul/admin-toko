@@ -132,5 +132,35 @@
             </tbody>
         </table>
     </div>
+
+    {{-- Pagination Control --}}
+    @if ($orders->hasPages())
+        <div class="pagination-container" style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.05); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+            <div style="font-size: 0.85rem; color: var(--muted);">
+                Menampilkan <strong>{{ $orders->firstItem() }}</strong> - <strong>{{ $orders->lastItem() }}</strong> dari total <strong>{{ $orders->total() }}</strong> pesanan.
+            </div>
+            <div style="display: flex; gap: 8px;">
+                @if ($orders->onFirstPage())
+                    <span class="button disabled" style="opacity: 0.4; cursor: not-allowed; padding: 8px 12px; min-height: auto; display: inline-flex; align-items: center; justify-content: center;" title="Halaman Sebelumnya">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </span>
+                @else
+                    <a href="{{ $orders->previousPageUrl() }}" class="button" style="padding: 8px 12px; min-height: auto; display: inline-flex; align-items: center; justify-content: center;" title="Halaman Sebelumnya">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </a>
+                @endif
+
+                @if ($orders->hasMorePages())
+                    <a href="{{ $orders->nextPageUrl() }}" class="button" style="padding: 8px 12px; min-height: auto; display: inline-flex; align-items: center; justify-content: center;" title="Halaman Berikutnya">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                @else
+                    <span class="button disabled" style="opacity: 0.4; cursor: not-allowed; padding: 8px 12px; min-height: auto; display: inline-flex; align-items: center; justify-content: center;" title="Halaman Berikutnya">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </span>
+                @endif
+            </div>
+        </div>
+    @endif
 </section>
 @endsection
