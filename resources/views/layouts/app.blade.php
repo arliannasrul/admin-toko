@@ -266,6 +266,12 @@
                 </a>
                 @endif
             </nav>
+            {{-- Buyer Website Link (Demo Switcher) --}}
+            <div style="padding: 12px 14px 0; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 8px;">
+                <a href="https://mitraspace-buyer.vercel.app/" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%); border: 1px solid rgba(249,115,22,0.25); border-radius: 8px; color: #ff9d42; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(249,115,22,0.18) 100%)'; this.style.borderColor='rgba(249,115,22,0.4)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%)'; this.style.borderColor='rgba(249,115,22,0.25)';">
+                    <span style="font-size: 16px;">🛍️</span> Ke Toko Buyer (Demo)
+                </a>
+            </div>
         </div>
 
         @auth
