@@ -23,9 +23,18 @@ class Order extends Model
         'shipping_service',
         'shipping_cost',
         'status',
+        'payment_status',
         'waybill',
         'kiriminaja_order_id',
     ];
+
+    /**
+     * Relasi ke keluhan customer.
+     */
+    public function complaints(): HasMany
+    {
+        return $this->hasMany(CustomerComplaint::class);
+    }
 
     /**
      * Relasi ke item order (pivot).

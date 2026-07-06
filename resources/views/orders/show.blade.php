@@ -27,6 +27,24 @@
                 </span>
             </div>
 
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--line);">
+                <span style="color: var(--muted); font-weight: 500;">Status Pembayaran</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="badge badge-{{ $order->payment_status === 'paid' ? 'delivered' : ($order->payment_status === 'refunded' ? 'cancelled' : 'pending') }}">
+                        {{ strtoupper($order->payment_status ?? 'unpaid') }}
+                    </span>
+                    <form action="{{ route('orders.payment', $order->id) }}" method="POST" style="margin: 0; display: flex; gap: 4px;">
+                        @csrf
+                        <select name="payment_status" style="padding: 2px 6px; font-size: 0.75rem; width: 105px; min-height: auto;">
+                            <option value="unpaid" @selected(($order->payment_status ?? 'unpaid') === 'unpaid')>Unpaid</option>
+                            <option value="paid" @selected($order->payment_status === 'paid')>Paid</option>
+                            <option value="refunded" @selected($order->payment_status === 'refunded')>Refunded</option>
+                        </select>
+                        <button type="submit" class="button" style="padding: 2px 6px; min-height: auto; font-size: 0.75rem; background: var(--accent); border: none;">Ubah</button>
+                    </form>
+                </div>
+            </div>
+
             <div>
                 <strong style="display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; text-transform: uppercase;">Pelanggan</strong>
                 <div style="font-size: 1.05rem; font-weight: 700;">{{ $order->customer_name }}</div>

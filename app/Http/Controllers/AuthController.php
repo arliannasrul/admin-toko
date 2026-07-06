@@ -44,20 +44,35 @@ class AuthController extends Controller
     public function handleGoogleCallback(): RedirectResponse
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
             dd($e->getMessage(), $e);
             return redirect()->route('login')->withErrors(['error' => 'Gagal login menggunakan Google. Silakan coba lagi.']);
         }
 
         // Find or create the user based on email
-        $user = User::updateOrCreate([
-            'email' => $googleUser->getEmail(),
-        ], [
-            'name' => $googleUser->getName(),
-            'google_id' => $googleUser->getId(),
-            'avatar' => $googleUser->getAvatar(),
-        ]);
+        $isFirstUser = User::count() === 0;
+
+        $user = User::where('email', $googleUser->getEmail())->first();
+        if (!$user) {
+            $user = User::create([
+                'email' => $googleUser->getEmail(),
+                'name' => $googleUser->getName(),
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
+                'role' => ($isFirstUser || $googleUser->getEmail() === 'arliannasrul@gmail.com') ? 'super_admin' : 'guest',
+            ]);
+        } else {
+            $updateData = [
+                'name' => $googleUser->getName(),
+                'google_id' => $googleUser->getId(),
+                'avatar' => $googleUser->getAvatar(),
+            ];
+            if ($googleUser->getEmail() === 'arliannasrul@gmail.com') {
+                $updateData['role'] = 'super_admin';
+            }
+            $user->update($updateData);
+        }
 
         Auth::login($user, true);
 

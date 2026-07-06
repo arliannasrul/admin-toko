@@ -53,6 +53,7 @@
     </div>
 </section>
 
+@if (!Auth::user()->isSalesStaff())
 <section class="panel">
     <h2>Tambah Barang</h2>
     <form class="form-grid" method="post" action="{{ route('items.store') }}" enctype="multipart/form-data">
@@ -74,4 +75,5 @@
         <button class="button primary" type="submit">Simpan barang</button>
     </form>
 </section>
+@endif
 @endsection

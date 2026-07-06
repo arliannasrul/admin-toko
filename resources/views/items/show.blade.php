@@ -8,7 +8,9 @@
     </div>
     <div style="display: flex; gap: 8px;">
         <a class="button" href="{{ route('items.index') }}">Kembali</a>
-        <a class="button primary" href="{{ route('items.edit', $item['id']) }}">Edit Barang</a>
+        @if (!Auth::user()->isSalesStaff())
+            <a class="button primary" href="{{ route('items.edit', $item['id']) }}">Edit Barang</a>
+        @endif
     </div>
 </header>
 @if (!empty($item['image_url']))
@@ -26,7 +28,8 @@
     <article><span>Nilai</span><strong>Rp {{ number_format(($item['quantity'] ?? 0) * ($item['unit_price'] ?? 0), 0, ',', '.') }}</strong></article>
 </section>
 
-<section class="grid two">
+<section class="grid @if(!Auth::user()->isSalesStaff()) two @endif">
+    @if (!Auth::user()->isSalesStaff())
     <div class="panel">
         <h2>Catat Pergerakan</h2>
         <form class="stack" method="post" action="{{ route('movements.store', $item['id']) }}">
@@ -44,6 +47,7 @@
             <button class="button primary" type="submit">Catat stok</button>
         </form>
     </div>
+    @endif
 
     <div class="panel">
         <h2>Komunikasi</h2>

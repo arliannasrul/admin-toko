@@ -5,6 +5,224 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
     <link rel="stylesheet" href="/css/app.css">
+    <style>
+        /* ===========================
+           GUEST TOAST NOTIFICATION
+           =========================== */
+        .guest-toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            width: 340px;
+            background: linear-gradient(135deg, #0d1222 0%, #111827 100%);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(245,158,11,0.08);
+            padding: 20px 20px 18px;
+            animation: toastIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            backdrop-filter: blur(20px);
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .guest-toast-dismiss {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 18px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .guest-toast-dismiss:hover { color: #f8fafc; background: rgba(255,255,255,0.06); }
+
+        .guest-toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(251,191,36,0.1) 100%);
+            border: 1px solid rgba(245,158,11,0.3);
+            display: grid;
+            place-items: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+        .guest-toast-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #f8fafc;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        .guest-toast-desc {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            line-height: 1.55;
+            margin-bottom: 16px;
+        }
+        .guest-toast-desc strong {
+            color: #fbbf24;
+        }
+        .guest-toast-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-apply-admin {
+            flex: 1;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #0d1117;
+            font-weight: 700;
+            font-size: 0.83rem;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: opacity 0.2s, transform 0.15s;
+            text-align: center;
+        }
+        .btn-apply-admin:hover { opacity: 0.92; transform: translateY(-1px); }
+        .btn-apply-admin:active { transform: translateY(0); }
+        .btn-dismiss-soft {
+            background: rgba(255,255,255,0.04);
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.82rem;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .btn-dismiss-soft:hover { background: rgba(255,255,255,0.08); color: #94a3b8; }
+
+        /* Pending status variant */
+        .guest-toast.pending {
+            border-color: rgba(16,185,129,0.3);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(16,185,129,0.06);
+        }
+        .guest-toast.pending .guest-toast-icon {
+            background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(52,211,153,0.1) 100%);
+            border-color: rgba(16,185,129,0.3);
+        }
+        .guest-toast.pending .guest-toast-desc strong { color: #34d399; }
+        .pending-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #34d399;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 20px;
+            padding: 5px 12px;
+            width: 100%;
+            justify-content: center;
+        }
+        .pending-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 1.8s infinite;
+        }
+        /* ===========================
+           GUEST BLOCKED MODAL
+           =========================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-box {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(239, 68, 68, 0.1);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 460px;
+            padding: 32px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: shake 0.5s ease-in-out;
+        }
+        .modal-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 12px;
+        }
+        .modal-text {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .modal-text strong {
+            color: #ef4444;
+        }
+        .modal-close-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+        }
+        .modal-close-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+        .modal-close-btn:active {
+            transform: translateY(0);
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+    </style>
 </head>
 <body>
     <aside class="sidebar">
@@ -23,18 +241,30 @@
                 <a href="{{ route('items.index') }}" @class(['active' => request()->routeIs('items.*')])>
                     <span style="font-size: 16px;">📦</span> Barang
                 </a>
+                <a href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])>
+                    <span style="font-size: 16px;">🔔</span> Notifikasi
+                </a>
+                {{-- Orders & CRM: untuk sales_staff, super_admin, dan guest (read-only) --}}
+                @if(Auth::user()->isSalesStaff() || Auth::user()->isSuperAdmin() || Auth::user()->role === 'guest')
                 <a href="{{ route('orders.index') }}" @class(['active' => request()->routeIs('orders.*')])>
                     <span style="font-size: 16px;">🚚</span> Tracking & Orders
                 </a>
                 <a href="{{ route('crm.index') }}" @class(['active' => request()->routeIs('crm.*')])>
                     <span style="font-size: 16px;">👥</span> CRM & Pelanggan
                 </a>
+                @endif
+                {{-- Reports: untuk warehouse_staff, super_admin, dan guest (read-only) --}}
+                @if(Auth::user()->isWarehouseStaff() || Auth::user()->isSuperAdmin() || Auth::user()->role === 'guest')
                 <a href="{{ route('reports.index') }}" @class(['active' => request()->routeIs('reports.*')])>
                     <span style="font-size: 16px;">📈</span> Laporan
                 </a>
-                <a href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])>
-                    <span style="font-size: 16px;">🔔</span> Notifikasi
+                @endif
+                {{-- User Management: hanya super_admin --}}
+                @if(Auth::user()->isSuperAdmin())
+                <a href="{{ route('users.index') }}" @class(['active' => request()->routeIs('users.*')])>
+                    <span style="font-size: 16px;">⚙️</span> Manajemen Pengguna
                 </a>
+                @endif
             </nav>
         </div>
 
@@ -50,7 +280,16 @@
                 @endif
                 <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                     <strong style="display: block; font-size: 14px; color: white;">{{ Auth::user()->name }}</strong>
-                    <small style="display: block; font-size: 11px; color: #9fb1bd;">{{ Auth::user()->email }}</small>
+                    <small style="display: block; font-size: 11px; color: #9fb1bd; margin-bottom: 4px;">{{ Auth::user()->email }}</small>
+                    @if (Auth::user()->isSuperAdmin())
+                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 4px; font-weight: 600;">Super Admin</span>
+                    @elseif (Auth::user()->isWarehouseStaff())
+                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); border-radius: 4px; font-weight: 600;">Staff Gudang</span>
+                    @elseif (Auth::user()->isSalesStaff())
+                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 4px; font-weight: 600;">Staff Penjualan</span>
+                    @elseif (Auth::user()->role === 'guest')
+                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; font-weight: 600;">👁️ Guest (Demo)</span>
+                    @endif
                 </div>
             </div>
             <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
@@ -83,5 +322,112 @@
 
         @yield('content')
     </main>
+
+    {{-- ===== GUEST TOAST MODAL ===== --}}
+    @auth
+    @if(Auth::user()->role === 'guest')
+        @php
+            $requestStatus = Auth::user()->admin_request_status;
+            $isPending = !empty($requestStatus) && str_starts_with($requestStatus, 'pending:');
+            $requestedRole = $isPending ? str_replace('pending:', '', $requestStatus) : null;
+            
+            $requestedRoleLabel = match($requestedRole) {
+                'super_admin' => 'Super Admin',
+                'warehouse_staff' => 'Staff Gudang',
+                'sales_staff' => 'Staff Penjualan',
+                default => 'Admin'
+            };
+        @endphp
+        @if($isPending)
+            {{-- Already applied: show status --}}
+            <div class="guest-toast pending" id="guestToast">
+                <button class="guest-toast-dismiss" onclick="dismissToast()" title="Tutup">✕</button>
+                <div class="guest-toast-icon">⏳</div>
+                <div class="guest-toast-title">Pengajuan Sedang Ditinjau</div>
+                <div class="guest-toast-desc">
+                    Permintaan akses sebagai <strong>{{ $requestedRoleLabel }}</strong> sedang menunggu persetujuan dari <strong>Super Admin</strong>. Anda tetap dapat menjelajahi sistem dalam mode read-only.
+                </div>
+                <div class="pending-badge">
+                    <span class="pending-dot"></span>
+                    Menunggu Persetujuan Super Admin
+                </div>
+            </div>
+        @else
+            {{-- Not yet applied: show apply button --}}
+            <div class="guest-toast" id="guestToast">
+                <button class="guest-toast-dismiss" onclick="dismissToast()" title="Tutup">✕</button>
+                <div class="guest-toast-icon">👁️</div>
+                <div class="guest-toast-title">Anda Masuk Sebagai Guest</div>
+                <div class="guest-toast-desc" style="margin-bottom: 12px;">
+                    Mode demo aktif — Anda dapat <strong>melihat semua fitur</strong> namun tidak dapat melakukan perubahan data. Pilih role dan ajukan akses:
+                </div>
+                <form method="POST" action="{{ route('users.applyAdmin') }}" style="margin: 0; display: flex; flex-direction: column; gap: 10px;">
+                    @csrf
+                    <select name="role" required style="width: 100%; padding: 8px 10px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: #f8fafc; font-size: 0.82rem; outline: none; cursor: pointer; height: 36px;">
+                        <option value="warehouse_staff" style="background: #111827; color: #f8fafc;">Staff Gudang (Kelola Barang & Laporan)</option>
+                        <option value="sales_staff" style="background: #111827; color: #f8fafc;">Staff Penjualan (Kelola Order & CRM)</option>
+                        <option value="super_admin" style="background: #111827; color: #f8fafc;">Super Admin (Akses Penuh)</option>
+                    </select>
+                    <div class="guest-toast-actions">
+                        <button type="submit" class="btn-apply-admin" id="applyAdminBtn" style="height: 36px; padding: 0 14px;">
+                            🚀 Ajukan Akses
+                        </button>
+                        <button type="button" class="btn-dismiss-soft" onclick="dismissToast()" style="height: 36px; padding: 0 14px;">Nanti</button>
+                    </div>
+                </form>
+            </div>
+        @endif
+
+        <script>
+            function dismissToast() {
+                const toast = document.getElementById('guestToast');
+                if (toast) {
+                    toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(16px) scale(0.96)';
+                    setTimeout(() => toast.remove(), 300);
+                }
+                // Remember dismissal for this session
+                sessionStorage.setItem('guestToastDismissed', '1');
+            }
+
+            // Auto-dismiss if already dismissed this session
+            if (sessionStorage.getItem('guestToastDismissed') === '1') {
+                const t = document.getElementById('guestToast');
+                if (t) t.remove();
+            }
+        </script>
+    @endif
+    @endauth
+
+    {{-- Modal Popup Peringatan untuk Guest --}}
+    @if(session('guest_blocked'))
+    <div class="modal-overlay active" id="guestBlockedModal">
+        <div class="modal-box">
+            <span class="modal-icon">🚫</span>
+            <h3 class="modal-title">Tindakan Dibatasi</h3>
+            <p class="modal-text">
+                Sebagai <strong>Guest (Demo)</strong>, Anda tidak diperbolehkan melakukan penambahan, perubahan, atau penghapusan data di dashboard ini.
+            </p>
+            <button class="modal-close-btn" onclick="closeBlockedModal()">Mengerti</button>
+        </div>
+    </div>
+    <script>
+        function closeBlockedModal() {
+            const modal = document.getElementById('guestBlockedModal');
+            if (modal) {
+                modal.classList.remove('active');
+                setTimeout(() => modal.remove(), 300);
+            }
+        }
+        // Menutup modal jika area overlay di luar modal diklik
+        document.getElementById('guestBlockedModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBlockedModal();
+            }
+        });
+    </script>
+    @endif
+
 </body>
 </html>
