@@ -22,6 +22,7 @@ class User extends Authenticatable
         'google_id',
         'avatar',
         'password',
+        'role',
     ];
 
     /**
@@ -45,5 +46,20 @@ class User extends Authenticatable
             'email_verified_at'   => 'datetime',
             'password'            => 'hashed',
         ];
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isWarehouseStaff(): bool
+    {
+        return $this->role === 'warehouse_staff';
+    }
+
+    public function isSalesStaff(): bool
+    {
+        return $this->role === 'sales_staff';
     }
 }

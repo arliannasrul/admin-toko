@@ -23,18 +23,27 @@
                 <a href="{{ route('items.index') }}" @class(['active' => request()->routeIs('items.*')])>
                     <span style="font-size: 16px;">📦</span> Barang
                 </a>
+                @if(!Auth::user()->isWarehouseStaff())
                 <a href="{{ route('orders.index') }}" @class(['active' => request()->routeIs('orders.*')])>
                     <span style="font-size: 16px;">🚚</span> Tracking & Orders
                 </a>
                 <a href="{{ route('crm.index') }}" @class(['active' => request()->routeIs('crm.*')])>
                     <span style="font-size: 16px;">👥</span> CRM & Pelanggan
                 </a>
+                @endif
+                @if(!Auth::user()->isSalesStaff())
                 <a href="{{ route('reports.index') }}" @class(['active' => request()->routeIs('reports.*')])>
                     <span style="font-size: 16px;">📈</span> Laporan
                 </a>
+                @endif
                 <a href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])>
                     <span style="font-size: 16px;">🔔</span> Notifikasi
                 </a>
+                @if(Auth::user()->isSuperAdmin())
+                <a href="{{ route('users.index') }}" @class(['active' => request()->routeIs('users.*')])>
+                    <span style="font-size: 16px;">⚙️</span> Manajemen Pengguna
+                </a>
+                @endif
             </nav>
         </div>
 
@@ -50,7 +59,14 @@
                 @endif
                 <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                     <strong style="display: block; font-size: 14px; color: white;">{{ Auth::user()->name }}</strong>
-                    <small style="display: block; font-size: 11px; color: #9fb1bd;">{{ Auth::user()->email }}</small>
+                    <small style="display: block; font-size: 11px; color: #9fb1bd; margin-bottom: 4px;">{{ Auth::user()->email }}</small>
+                    @if (Auth::user()->isSuperAdmin())
+                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 4px; font-weight: 600;">Super Admin</span>
+                    @elseif (Auth::user()->isWarehouseStaff())
+                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); border-radius: 4px; font-weight: 600;">Staff Gudang</span>
+                    @elseif (Auth::user()->isSalesStaff())
+                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 4px; font-weight: 600;">Staff Penjualan</span>
+                    @endif
                 </div>
             </div>
             <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">

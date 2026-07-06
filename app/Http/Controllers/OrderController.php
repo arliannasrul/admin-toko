@@ -138,6 +138,21 @@ class OrderController extends Controller
     }
 
     /**
+     * Update status pembayaran order
+     */
+    public function updatePaymentStatus(string $id, Request $request): RedirectResponse
+    {
+        $order = Order::findOrFail($id);
+        $validated = $request->validate([
+            'payment_status' => 'required|in:unpaid,paid,refunded',
+        ]);
+
+        $order->update(['payment_status' => $validated['payment_status']]);
+
+        return back()->with('status', 'Status pembayaran berhasil diperbarui.');
+    }
+
+    /**
      * API untuk mengambil tarif ekspedisi Kiriminaja (AJAX)
      */
     public function apiGetRates(Request $request): \Illuminate\Http\JsonResponse

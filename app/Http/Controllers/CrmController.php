@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\CustomerComplaint;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
@@ -20,14 +22,160 @@ class CrmController extends Controller
             DB::raw('MAX(orders.customer_address) as customer_address'),
             DB::raw('COUNT(DISTINCT orders.id) as total_orders'),
             DB::raw('MAX(orders.created_at) as last_order_date'),
-            DB::raw('SUM(orders.shipping_cost + COALESCE((SELECT SUM(quantity * price) FROM order_items WHERE order_items.order_id = orders.id), 0)) as total_spent')
+            DB::raw('SUM(orders.shipping_cost + COALESCE((SELECT SUM(quantity * price) FROM order_items WHERE order_items.order_id = orders.id), 0)) as total_spent'),
+            DB::raw('(SELECT status FROM orders o2 WHERE o2.customer_phone = orders.customer_phone ORDER BY o2.created_at DESC LIMIT 1) as last_shipping_status'),
+            DB::raw('(SELECT payment_status FROM orders o3 WHERE o3.customer_phone = orders.customer_phone ORDER BY o3.created_at DESC LIMIT 1) as last_payment_status')
         )
         ->groupBy('orders.customer_phone')
         ->orderBy('last_order_date', 'desc')
         ->get()
         ->toArray();
 
-        return view('crm.index', compact('customers'));
+        $totalCustomers = count($customers);
+        $vipCount = 0;
+        $atRiskCount = 0;
+
+        foreach ($customers as &$customer) {
+            $lastOrder = \Carbon\Carbon::parse($customer['last_order_date']);
+            $isAtRisk = $lastOrder->diffInDays(now()) > 60;
+            
+            if ($isAtRisk) {
+                $customer['segment'] = 'At Risk';
+                $atRiskCount++;
+            } elseif ($customer['total_spent'] >= 1000000 && $customer['total_orders'] >= 5) {
+                $customer['segment'] = 'VIP';
+                $vipCount++;
+            } elseif ($customer['total_orders'] >= 3) {
+                $customer['segment'] = 'Loyal';
+            } else {
+                $customer['segment'] = 'New';
+            }
+        }
+
+        $activeComplaintsCount = CustomerComplaint::where('status', '!=', 'resolved')->count();
+
+        return view('crm.index', compact('customers', 'totalCustomers', 'vipCount', 'atRiskCount', 'activeComplaintsCount'));
+    }
+
+    /**
+     * Tampilkan detail pelanggan, riwayat pesanan, dan keluhan
+     */
+    public function showDetail(string $phone): View
+    {
+        $orders = Order::with('items')
+            ->where('customer_phone', $phone)
+            ->latest()
+            ->get();
+
+        if ($orders->isEmpty()) {
+            abort(404, 'Pelanggan tidak ditemukan.');
+        }
+
+        $customerName = $orders->first()->customer_name;
+        $customerAddress = $orders->first()->customer_address;
+        
+        $totalOrders = $orders->count();
+        $totalSpent = 0;
+        foreach ($orders as $order) {
+            $itemsTotal = $order->items->sum(fn($i) => $i->pivot->quantity * $i->pivot->price);
+            $totalSpent += $order->shipping_cost + $itemsTotal;
+        }
+
+        $lastOrderDate = $orders->first()->created_at;
+        $isAtRisk = $lastOrderDate->diffInDays(now()) > 60;
+        
+        if ($isAtRisk) {
+            $segment = 'At Risk';
+        } elseif ($totalSpent >= 1000000 && $totalOrders >= 5) {
+            $segment = 'VIP';
+        } elseif ($totalOrders >= 3) {
+            $segment = 'Loyal';
+        } else {
+            $segment = 'New';
+        }
+
+        $complaints = CustomerComplaint::where('customer_phone', $phone)
+            ->latest()
+            ->get();
+
+        return view('crm.detail', compact(
+            'phone',
+            'customerName',
+            'customerAddress',
+            'orders',
+            'totalOrders',
+            'totalSpent',
+            'segment',
+            'complaints'
+        ));
+    }
+
+    /**
+     * Tampilkan daftar keluhan customer
+     */
+    public function complaints(Request $request): View
+    {
+        $status = $request->input('status', 'all');
+        $query = CustomerComplaint::query();
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $complaints = $query->latest()->get();
+
+        $counts = [
+            'all' => CustomerComplaint::count(),
+            'open' => CustomerComplaint::where('status', 'open')->count(),
+            'in_progress' => CustomerComplaint::where('status', 'in_progress')->count(),
+            'resolved' => CustomerComplaint::where('status', 'resolved')->count(),
+        ];
+
+        // Dapatkan data order terakhir untuk memudahkan pengisian manual form keluhan
+        $recentOrders = Order::latest()->take(50)->get();
+
+        return view('crm.complaints', compact('complaints', 'counts', 'status', 'recentOrders'));
+    }
+
+    /**
+     * Simpan keluhan customer baru
+     */
+    public function storeComplaint(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'order_id' => 'nullable|exists:orders,id',
+            'customer_phone' => 'required|string',
+            'customer_name' => 'required|string',
+            'subject' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        CustomerComplaint::create($validated);
+
+        return back()->with('status', 'Keluhan customer berhasil ditambahkan.');
+    }
+
+    /**
+     * Update status keluhan
+     */
+    public function updateComplaintStatus(string $id, Request $request): RedirectResponse
+    {
+        $complaint = CustomerComplaint::findOrFail($id);
+        
+        $validated = $request->validate([
+            'status' => 'required|in:open,in_progress,resolved',
+        ]);
+
+        $updateData = ['status' => $validated['status']];
+        if ($validated['status'] === 'resolved') {
+            $updateData['resolved_at'] = now();
+        } else {
+            $updateData['resolved_at'] = null;
+        }
+
+        $complaint->update($updateData);
+
+        return back()->with('status', 'Status keluhan berhasil diperbarui.');
     }
 
     /**
