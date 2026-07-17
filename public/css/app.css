@@ -935,3 +935,20 @@ html[data-theme="light"] .hamburger-btn:hover {
     .main { padding: 0; }
     .panel { border: none; box-shadow: none; background: transparent; padding: 0; }
 }
+
+/* SPA Loading Bar */
+#spa-loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent-gradient);
+    z-index: 99999;
+    width: 0%;
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+#spa-loading-bar.active {
+    opacity: 1;
+}

@@ -318,46 +318,45 @@
                 <a href="https://mitraspace-buyer.vercel.app/" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%); border: 1px solid rgba(249,115,22,0.25); border-radius: 8px; color: #ff9d42; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(249,115,22,0.18) 100%)'; this.style.borderColor='rgba(249,115,22,0.4)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%)'; this.style.borderColor='rgba(249,115,22,0.25)';">
                     <span style="font-size: 16px;">🛍️</span> Ke Toko Buyer (Demo)
                 </a>
-            </div>
-        </div>
-
-        @auth
-        <div class="user-profile">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                @if (Auth::user()->avatar)
-                    <img src="{{ Auth::user()->avatar }}" alt="" class="profile-avatar">
-                @else
-                    <div class="profile-avatar-placeholder">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                @auth
+                <div class="user-profile" style="margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        @if (Auth::user()->avatar)
+                            <img src="{{ Auth::user()->avatar }}" alt="" class="profile-avatar">
+                        @else
+                            <div class="profile-avatar-placeholder">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                        @endif
+                        <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <strong class="profile-name">{{ Auth::user()->name }}</strong>
+                            <small style="display: block; font-size: 11px; color: #9fb1bd; margin-bottom: 4px;">{{ Auth::user()->email }}</small>
+                            @if (Auth::user()->isSuperAdmin())
+                                <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 4px; font-weight: 600;">Super Admin</span>
+                            @elseif (Auth::user()->isWarehouseStaff())
+                                <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); border-radius: 4px; font-weight: 600;">Staff Gudang</span>
+                            @elseif (Auth::user()->isSalesStaff())
+                                <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 4px; font-weight: 600;">Staff Penjualan</span>
+                            @elseif (Auth::user()->role === 'guest')
+                                <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; font-weight: 600;">👁️ Guest (Demo)</span>
+                            @endif
+                        </div>
                     </div>
-                @endif
-                <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                    <strong class="profile-name">{{ Auth::user()->name }}</strong>
-                    <small style="display: block; font-size: 11px; color: #9fb1bd; margin-bottom: 4px;">{{ Auth::user()->email }}</small>
-                    @if (Auth::user()->isSuperAdmin())
-                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 4px; font-weight: 600;">Super Admin</span>
-                    @elseif (Auth::user()->isWarehouseStaff())
-                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); border-radius: 4px; font-weight: 600;">Staff Gudang</span>
-                    @elseif (Auth::user()->isSalesStaff())
-                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 4px; font-weight: 600;">Staff Penjualan</span>
-                    @elseif (Auth::user()->role === 'guest')
-                        <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; font-weight: 600;">👁️ Guest (Demo)</span>
-                    @endif
+                    <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
+                        @csrf
+                        <button type="submit" class="logout-btn">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Keluar
+                        </button>
+                    </form>
                 </div>
+                @endauth
             </div>
-            <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                    Keluar
-                </button>
-            </form>
         </div>
-        @endauth
     </aside>
 
     <main class="main">
@@ -482,7 +481,7 @@
     </script>
     @endif
 
-    {{-- Mobile Nav & Theme Switcher Script --}}
+    {{-- Mobile Nav, Theme Switcher & SPA Loader Script --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Sidebar Drawer Toggle Function
@@ -536,6 +535,145 @@
                     updateThemeBtn(activeTheme);
                 });
             }
+
+            // SPA-like AJAX Page Loader
+            function loadPage(url, pushState = true) {
+                // Get or create loading bar
+                let progress = document.getElementById('spa-loading-bar');
+                if (!progress) {
+                    progress = document.createElement('div');
+                    progress.id = 'spa-loading-bar';
+                    document.body.appendChild(progress);
+                }
+                
+                // Show loading bar
+                progress.classList.add('active');
+                progress.style.width = '30%';
+                
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.text();
+                    })
+                    .then(html => {
+                        progress.style.width = '100%';
+                        
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        
+                        // Update title
+                        document.title = doc.title;
+                        
+                        // Update main content
+                        const main = document.querySelector('.main');
+                        const newMain = doc.querySelector('.main');
+                        if (main && newMain) {
+                            main.innerHTML = newMain.innerHTML;
+                        }
+                        
+                        // Update active state in sidebar nav
+                        const currentActive = document.querySelector('nav a.active');
+                        if (currentActive) currentActive.classList.remove('active');
+                        
+                        const sidebarLinks = document.querySelectorAll('nav a');
+                        const currentPath = new URL(url).pathname;
+                        sidebarLinks.forEach(link => {
+                            const linkPath = new URL(link.href).pathname;
+                            if (currentPath === linkPath || (currentPath.startsWith(linkPath) && linkPath !== '/')) {
+                                link.classList.add('active');
+                            }
+                        });
+                        
+                        // Execute scripts inside the newly loaded main container
+                        if (main) {
+                            const scripts = main.querySelectorAll('script');
+                            scripts.forEach(script => {
+                                const newScript = document.createElement('script');
+                                if (script.src) {
+                                    newScript.src = script.src;
+                                } else {
+                                    newScript.textContent = script.textContent;
+                                }
+                                script.parentNode.replaceChild(newScript, script);
+                            });
+                        }
+                        
+                        // Update browser URL
+                        if (pushState) {
+                            window.history.pushState({ url: url }, doc.title, url);
+                        }
+                        
+                        // Scroll to top
+                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        
+                        // Hide loading bar
+                        setTimeout(() => {
+                            progress.style.width = '0%';
+                            progress.classList.remove('active');
+                        }, 300);
+                    })
+                    .catch(err => {
+                        console.error('SPA load failed, falling back to reload:', err);
+                        window.location.href = url;
+                    });
+            }
+
+            // Intercept internal links
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (!link) return;
+                
+                const href = link.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.getAttribute('target') === '_blank' || link.hasAttribute('download')) {
+                    return;
+                }
+                
+                const isInternal = link.href && link.href.startsWith(window.location.origin);
+                if (isInternal) {
+                    if (link.closest('form')) return; // let form actions handle themselves
+                    
+                    e.preventDefault();
+                    loadPage(link.href);
+                    
+                    // Close sidebar if open on mobile
+                    const sidebar = document.getElementById('sidebar');
+                    const sidebarOverlay = document.getElementById('sidebarOverlay');
+                    if (sidebar && sidebar.classList.contains('active')) {
+                        sidebar.classList.remove('active');
+                        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+                    }
+                }
+            });
+
+            // Intercept internal GET form submissions
+            document.addEventListener('submit', function(e) {
+                const form = e.target;
+                if (form.method.toLowerCase() === 'get') {
+                    const action = form.getAttribute('action') || window.location.pathname;
+                    const isInternal = action.startsWith('/') || action.startsWith(window.location.origin);
+                    if (isInternal) {
+                        e.preventDefault();
+                        const formData = new FormData(form);
+                        const params = new URLSearchParams(formData);
+                        // Filter empty parameters
+                        for (const [key, value] of [...params.entries()]) {
+                            if (!value) params.delete(key);
+                        }
+                        const url = new URL(action, window.location.origin);
+                        url.search = params.toString();
+                        loadPage(url.toString());
+                    }
+                }
+            });
+
+            // Handle back/forward navigation
+            window.addEventListener('popstate', function(e) {
+                if (e.state && e.state.url) {
+                    loadPage(e.state.url, false);
+                } else {
+                    loadPage(window.location.href, false);
+                }
+            });
         });
     </script>
 </body>
