@@ -272,9 +272,13 @@
 
             <!-- Theme Toggle Selector Button -->
             <div class="theme-toggle-container">
-                <button class="theme-toggle-btn" id="themeToggleBtn" type="button">
-                    <span class="theme-icon">☀️</span>
-                    <span class="theme-text">Mode Terang</span>
+                <button class="theme-switch-btn" id="themeToggleBtn" type="button" aria-label="Toggle Theme">
+                    <div class="theme-switch-track">
+                        <span class="theme-icon sun">☀️</span>
+                        <span class="theme-icon moon">🌙</span>
+                        <div class="theme-switch-thumb"></div>
+                    </div>
+                    <span class="theme-text" id="themeToggleText">Mode Gelap</span>
                 </button>
             </div>
             <nav>
@@ -310,7 +314,7 @@
                 @endif
             </nav>
             {{-- Buyer Website Link (Demo Switcher) --}}
-            <div style="padding: 12px 14px 0; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 8px;">
+            <div style="padding: 12px 14px 0; border-top: 1px solid var(--line); margin-top: 8px;">
                 <a href="https://mitraspace-buyer.vercel.app/" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%); border: 1px solid rgba(249,115,22,0.25); border-radius: 8px; color: #ff9d42; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(249,115,22,0.18) 100%)'; this.style.borderColor='rgba(249,115,22,0.4)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%)'; this.style.borderColor='rgba(249,115,22,0.25)';">
                     <span style="font-size: 16px;">🛍️</span> Ke Toko Buyer (Demo)
                 </a>
@@ -318,17 +322,17 @@
         </div>
 
         @auth
-        <div class="user-profile" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; margin-top: auto; display: flex; flex-direction: column; gap: 12px;">
+        <div class="user-profile">
             <div style="display: flex; align-items: center; gap: 10px;">
                 @if (Auth::user()->avatar)
-                    <img src="{{ Auth::user()->avatar }}" alt="" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2);">
+                    <img src="{{ Auth::user()->avatar }}" alt="" class="profile-avatar">
                 @else
-                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #2bb5a6; display: grid; place-items: center; font-weight: 700; color: white;">
+                    <div class="profile-avatar-placeholder">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                 @endif
                 <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                    <strong style="display: block; font-size: 14px; color: white;">{{ Auth::user()->name }}</strong>
+                    <strong class="profile-name">{{ Auth::user()->name }}</strong>
                     <small style="display: block; font-size: 11px; color: #9fb1bd; margin-bottom: 4px;">{{ Auth::user()->email }}</small>
                     @if (Auth::user()->isSuperAdmin())
                         <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 4px; font-weight: 600;">Super Admin</span>
@@ -343,7 +347,7 @@
             </div>
             <form method="POST" action="{{ route('logout') }}" style="margin: 0; width: 100%;">
                 @csrf
-                <button type="submit" style="width: 100%; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #f8fafc; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                <button type="submit" class="logout-btn">
                     <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
@@ -510,16 +514,13 @@
 
             // Theme Toggle Function
             const themeToggleBtn = document.getElementById('themeToggleBtn');
-            if (themeToggleBtn) {
+            const themeToggleText = document.getElementById('themeToggleText');
+            if (themeToggleBtn && themeToggleText) {
                 function updateThemeBtn(theme) {
-                    const themeIcon = themeToggleBtn.querySelector('.theme-icon');
-                    const themeText = themeToggleBtn.querySelector('.theme-text');
                     if (theme === 'light') {
-                        themeIcon.textContent = '🌙';
-                        themeText.textContent = 'Mode Gelap';
+                        themeToggleText.textContent = 'Mode Terang';
                     } else {
-                        themeIcon.textContent = '☀️';
-                        themeText.textContent = 'Mode Terang';
+                        themeToggleText.textContent = 'Mode Gelap';
                     }
                 }
 
