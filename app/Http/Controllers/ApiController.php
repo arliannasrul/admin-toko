@@ -54,6 +54,7 @@ class ApiController extends Controller
             'items' => ['required', 'array', 'min:1'],
             'items.*.id' => ['required', 'exists:items,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'payment_status' => ['nullable', 'string', 'in:unpaid,paid,refunded'],
         ]);
 
         if ($validator->fails()) {
@@ -104,6 +105,7 @@ class ApiController extends Controller
                     'shipping_service' => $validated['shipping_service'],
                     'shipping_cost' => $validated['shipping_cost'],
                     'status' => 'pending',
+                    'payment_status' => $validated['payment_status'] ?? 'paid',
                 ]);
 
                 // 3. Create Order Items & potong stok
