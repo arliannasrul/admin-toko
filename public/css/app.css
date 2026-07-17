@@ -248,6 +248,16 @@ html[data-theme="light"] .profile-avatar {
     font-weight: 700;
     color: white;
 }
+code {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+html[data-theme="light"] code {
+    background: rgba(15, 23, 42, 0.06);
+}
+
 .profile-name {
     display: block;
     font-size: 14px;
@@ -255,6 +265,15 @@ html[data-theme="light"] .profile-avatar {
 }
 html[data-theme="light"] .profile-name {
     color: #0f172a;
+}
+.profile-email {
+    display: block;
+    font-size: 11px;
+    color: #9fb1bd;
+    margin-bottom: 4px;
+}
+html[data-theme="light"] .profile-email {
+    color: #64748b;
 }
 .logout-btn {
     width: 100%;
@@ -492,9 +511,47 @@ input::placeholder, textarea::placeholder {
 .button.secondary {
     background: #1e293b;
     border: 1px solid #334155;
+    color: #e2e8f0;
 }
 .button.secondary:hover {
     background: #334155;
+}
+html[data-theme="light"] .button {
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, 0.12);
+    background: rgba(15, 23, 42, 0.04);
+}
+html[data-theme="light"] .button:hover {
+    background: rgba(15, 23, 42, 0.08);
+    border-color: rgba(15, 23, 42, 0.2);
+    color: #0f172a;
+}
+html[data-theme="light"] .button.primary {
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+}
+html[data-theme="light"] .button.primary:hover {
+    color: white;
+}
+html[data-theme="light"] .button.success {
+    background: var(--success);
+    color: white;
+    border: none;
+}
+html[data-theme="light"] .button.secondary {
+    background: rgba(15, 23, 42, 0.05);
+    border: 1px solid rgba(15, 23, 42, 0.15);
+    color: #334155;
+}
+html[data-theme="light"] .button.secondary:hover {
+    background: rgba(15, 23, 42, 0.1);
+    color: #0f172a;
+}
+html[data-theme="light"] .button.danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border-color: var(--danger-border);
 }
 .button.danger {
     background: var(--danger-bg);
@@ -563,13 +620,22 @@ input::placeholder, textarea::placeholder {
     border: none;
 }
 .tab-link:hover {
-    color: white;
+    color: var(--ink);
     background: rgba(255,255,255,0.03);
 }
 .tab-link.active {
-    color: white;
+    color: var(--ink);
     background: rgba(255,255,255,0.07);
     border: 1px solid var(--line);
+}
+html[data-theme="light"] .tab-link:hover {
+    color: #0f172a;
+    background: rgba(15, 23, 42, 0.05);
+}
+html[data-theme="light"] .tab-link.active {
+    color: #0f172a;
+    background: rgba(15, 23, 42, 0.07);
+    border-color: rgba(15, 23, 42, 0.15);
 }
 
 /* Activity and Notifications */

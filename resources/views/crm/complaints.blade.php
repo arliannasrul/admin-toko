@@ -6,8 +6,8 @@
         <p class="eyebrow">Customer Support</p>
         <h1>Daftar Keluhan Pelanggan</h1>
     </div>
-    <a class="button secondary" href="{{ route('crm.index') }}">
-        ⬅️ Database Pelanggan
+    <a class="button secondary" href="{{ route('crm.index') }}" style="display: inline-flex; align-items: center; gap: 6px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg> Database Pelanggan
     </a>
 </header>
 
@@ -79,8 +79,8 @@
                             </td>
                             <td style="text-align: right;">
                                 <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-end;">
-                                    <a href="{{ route('crm.detail', ['phone' => $c->customer_phone]) }}" class="button secondary" style="padding: 4px 10px; min-height: auto; font-size: 0.8rem; width: fit-content;">
-                                        👁️ Profil
+                                    <a href="{{ route('crm.detail', ['phone' => $c->customer_phone]) }}" class="button secondary" style="padding: 4px 10px; min-height: auto; font-size: 0.8rem; width: fit-content; display: inline-flex; align-items: center; gap: 4px;">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Profil
                                     </a>
                                     
                                     <!-- Quick Update Status -->
@@ -155,8 +155,8 @@
                 <textarea name="description" rows="4" placeholder="Jelaskan kendala secara lengkap..." required></textarea>
             </div>
 
-            <button type="submit" class="button primary" style="width: 100%;">
-                💾 Buat Tiket Dukungan
+            <button type="submit" class="button primary" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Buat Tiket Dukungan
             </button>
         </form>
     </section>

@@ -70,8 +70,14 @@
                     @endif
                     <div>
                         <strong style="color: #fff;">{{ $movement['item']['name'] ?? '-' }}</strong>
-                        <span style="display: block; font-size: 13px; color: var(--muted); margin-top: 2px;">
-                            {{ $movement['type'] === 'IN' ? '📥 Masuk' : ($movement['type'] === 'OUT' ? '📤 Keluar' : $movement['type']) }} 
+                        <span style="display: block; font-size: 13px; color: var(--muted); margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                            @if($movement['type'] === 'IN')
+                                <svg viewBox="0 0 24 24" width="13" height="13" stroke="#10b981" stroke-width="2" fill="none"><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line><path d="M9 18H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"></path></svg> Masuk
+                            @elseif($movement['type'] === 'OUT')
+                                <svg viewBox="0 0 24 24" width="13" height="13" stroke="#ef4444" stroke-width="2" fill="none"><polyline points="9 21 3 21 3 15"></polyline><polyline points="3 21 10 14"></polyline><polyline points="15 3 21 3 21 9"></polyline><polyline points="21 3 14 10"></polyline></svg> Keluar
+                            @else
+                                {{ $movement['type'] }}
+                            @endif
                             <strong>{{ $movement['quantity'] }} {{ $movement['item']['unit'] ?? '' }}</strong> oleh <em>{{ $movement['actor'] }}</em>
                         </span>
                     </div>
