@@ -142,6 +142,38 @@
             </tbody>
         </table>
     </div>
+
+    {{-- Pagination Control --}}
+    @if ($orders->count() > 0 || $orders->total() > 0)
+        <div class="pagination-container" style="border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top: 1px solid var(--line);">
+            <div class="pagination-info">
+                Menampilkan <strong>{{ $orders->firstItem() ?? 0 }}</strong> - <strong>{{ $orders->lastItem() ?? 0 }}</strong> dari total <strong>{{ $orders->total() }}</strong> pesanan.
+            </div>
+            <div class="pagination-nav">
+                <span class="page-counter">Halaman {{ $orders->currentPage() }} / {{ $orders->lastPage() }}</span>
+                <div class="pagination-buttons">
+                    @if ($orders->onFirstPage())
+                        <span class="button disabled" title="Halaman Sebelumnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </span>
+                    @else
+                        <a href="{{ $orders->previousPageUrl() }}" class="button" title="Halaman Sebelumnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </a>
+                    @endif
+                    @if ($orders->hasMorePages())
+                        <a href="{{ $orders->nextPageUrl() }}" class="button" title="Halaman Berikutnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    @else
+                        <span class="button disabled" title="Halaman Berikutnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
 </section>
 
 <!-- Keluhan & CS Tiket Pelanggan -->
@@ -210,7 +242,7 @@
                 <label style="display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px;">Terkait Pesanan (Opsional)</label>
                 <select name="order_id">
                     <option value="">-- General / Tidak Terkait Order Spesifik --</option>
-                    @foreach ($orders as $o)
+                    @foreach ($allOrdersForDropdown as $o)
                         <option value="{{ $o->id }}">Order: {{ $o->order_number }} (Rp {{ number_format($o->shipping_cost + $o->items->sum(fn($i) => $i->pivot->quantity * $i->pivot->price), 0, ',', '.') }})</option>
                     @endforeach
                 </select>

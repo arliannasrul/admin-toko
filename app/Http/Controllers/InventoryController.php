@@ -100,9 +100,21 @@ class InventoryController extends Controller
             'value' => $items->sum(fn($item) => $item->quantity * $item->unit_price),
         ];
 
+        // Paginate items collection (10 per page)
+        $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        $perPage = 10;
+        $currentPageItems = $items->slice(($currentPage - 1) * $perPage, $perPage)->values()->toArray();
+        $paginatedItems = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentPageItems,
+            $items->count(),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
+        );
+
         return view('items.index', [
             'data' => [
-                'items' => $items->toArray(),
+                'items' => $paginatedItems,
                 'summary' => $summary,
             ],
             'filters' => $request->only(['q', 'category', 'location', 'stock']),
@@ -339,21 +351,33 @@ class InventoryController extends Controller
         }
 
         $items = $itemQuery->orderBy('name', 'asc')->get();
-        $movements = $movementQuery->latest()->take(500)->get();
+        $allMovements = $movementQuery->latest()->get();
 
         $summary = [
             'items' => $items->count(),
             'stock' => $items->sum('quantity'),
             'value' => $items->sum(fn($item) => $item->quantity * $item->unit_price),
-            'in' => $movements->filter(fn($m) => $m->type === 'IN')->sum('quantity'),
-            'out' => $movements->filter(fn($m) => in_array($m->type, ['OUT', 'DAMAGED']))->sum('quantity'),
+            'in' => $allMovements->filter(fn($m) => $m->type === 'IN')->sum('quantity'),
+            'out' => $allMovements->filter(fn($m) => in_array($m->type, ['OUT', 'DAMAGED']))->sum('quantity'),
         ];
+
+        // Paginate movements collection (15 per page)
+        $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        $perPage = 15;
+        $currentPageItems = $allMovements->slice(($currentPage - 1) * $perPage, $perPage)->values()->toArray();
+        $paginatedMovements = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentPageItems,
+            $allMovements->count(),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
+        );
 
         return view('reports.index', [
             'data' => [
                 'summary' => $summary,
                 'items' => $items->toArray(),
-                'movements' => $movements->toArray(),
+                'movements' => $paginatedMovements,
             ],
             'filters' => $request->only(['from', 'to', 'category', 'location']),
         ]);
@@ -407,8 +431,21 @@ class InventoryController extends Controller
 
     public function notifications(): View
     {
-        $notifications = Notification::latest()->take(80)->get();
-        return view('notifications.index', ['data' => ['notifications' => $notifications->toArray()]]);
+        $allNotifications = Notification::latest()->get();
+        
+        // Paginate notifications (15 per page)
+        $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        $perPage = 15;
+        $currentPageItems = $allNotifications->slice(($currentPage - 1) * $perPage, $perPage)->values()->toArray();
+        $paginatedNotifications = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentPageItems,
+            $allNotifications->count(),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
+        );
+
+        return view('notifications.index', ['data' => ['notifications' => $paginatedNotifications]]);
     }
 
     public function markNotificationRead(string $id): RedirectResponse

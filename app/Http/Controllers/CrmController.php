@@ -16,7 +16,7 @@ class CrmController extends Controller
      */
     public function index(): View
     {
-        $customers = Order::select(
+        $allCustomers = Order::select(
             'orders.customer_phone',
             DB::raw('MAX(orders.customer_name) as customer_name'),
             DB::raw('MAX(orders.customer_address) as customer_address'),
@@ -28,14 +28,15 @@ class CrmController extends Controller
         )
         ->groupBy('orders.customer_phone')
         ->orderBy('last_order_date', 'desc')
-        ->get()
-        ->toArray();
+        ->get();
 
-        $totalCustomers = count($customers);
+        $totalCustomers = $allCustomers->count();
         $vipCount = 0;
         $atRiskCount = 0;
 
-        foreach ($customers as &$customer) {
+        $customersList = [];
+        foreach ($allCustomers as $customerModel) {
+            $customer = $customerModel->toArray();
             $lastOrder = \Carbon\Carbon::parse($customer['last_order_date']);
             $isAtRisk = $lastOrder->diffInDays(now()) > 60;
             
@@ -50,7 +51,21 @@ class CrmController extends Controller
             } else {
                 $customer['segment'] = 'New';
             }
+            $customersList[] = $customer;
         }
+
+        // Paginate the array (5 customers per page)
+        $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        $perPage = 5;
+        $currentPageItems = array_slice($customersList, ($currentPage - 1) * $perPage, $perPage);
+        
+        $customers = new \Illuminate\Pagination\LengthAwarePaginator(
+            $currentPageItems,
+            count($customersList),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
+        );
 
         $activeComplaintsCount = CustomerComplaint::where('status', '!=', 'resolved')->count();
 
@@ -62,26 +77,26 @@ class CrmController extends Controller
      */
     public function showDetail(string $phone): View
     {
-        $orders = Order::with('items')
+        $allOrders = Order::with('items')
             ->where('customer_phone', $phone)
             ->latest()
             ->get();
 
-        if ($orders->isEmpty()) {
+        if ($allOrders->isEmpty()) {
             abort(404, 'Pelanggan tidak ditemukan.');
         }
 
-        $customerName = $orders->first()->customer_name;
-        $customerAddress = $orders->first()->customer_address;
+        $customerName = $allOrders->first()->customer_name;
+        $customerAddress = $allOrders->first()->customer_address;
         
-        $totalOrders = $orders->count();
+        $totalOrders = $allOrders->count();
         $totalSpent = 0;
-        foreach ($orders as $order) {
+        foreach ($allOrders as $order) {
             $itemsTotal = $order->items->sum(fn($i) => $i->pivot->quantity * $i->pivot->price);
             $totalSpent += $order->shipping_cost + $itemsTotal;
         }
 
-        $lastOrderDate = $orders->first()->created_at;
+        $lastOrderDate = $allOrders->first()->created_at;
         $isAtRisk = $lastOrderDate->diffInDays(now()) > 60;
         
         if ($isAtRisk) {
@@ -94,6 +109,20 @@ class CrmController extends Controller
             $segment = 'New';
         }
 
+        // Paginate orders (10 per page)
+        $currentPage = \Illuminate\Pagination\Paginator::resolveCurrentPage() ?: 1;
+        $perPage = 10;
+        $orders = new \Illuminate\Pagination\LengthAwarePaginator(
+            $allOrders->slice(($currentPage - 1) * $perPage, $perPage)->values(),
+            $allOrders->count(),
+            $perPage,
+            $currentPage,
+            ['path' => \Illuminate\Pagination\Paginator::resolveCurrentPath()]
+        );
+
+        // All orders for the "related order" dropdown in the complaints form (not paginated)
+        $allOrdersForDropdown = $allOrders;
+
         $complaints = CustomerComplaint::where('customer_phone', $phone)
             ->latest()
             ->get();
@@ -103,6 +132,7 @@ class CrmController extends Controller
             'customerName',
             'customerAddress',
             'orders',
+            'allOrdersForDropdown',
             'totalOrders',
             'totalSpent',
             'segment',

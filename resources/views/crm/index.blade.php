@@ -119,5 +119,38 @@
             </tbody>
         </table>
     </div>
+
+    {{-- Pagination Info & Controls --}}
+    @if ($customers->count() > 0 || $customers->total() > 0)
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Menampilkan <strong>{{ $customers->firstItem() ?? 0 }}</strong> - <strong>{{ $customers->lastItem() ?? 0 }}</strong> dari total <strong>{{ $customers->total() }}</strong> pelanggan.
+            </div>
+            <div class="pagination-nav">
+                <span class="page-counter">Halaman {{ $customers->currentPage() }} / {{ $customers->lastPage() }}</span>
+                <div class="pagination-buttons">
+                    @if ($customers->onFirstPage())
+                        <span class="button disabled" title="Halaman Sebelumnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </span>
+                    @else
+                        <a href="{{ $customers->appends(request()->query())->previousPageUrl() }}" class="button" title="Halaman Sebelumnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </a>
+                    @endif
+
+                    @if ($customers->hasMorePages())
+                        <a href="{{ $customers->appends(request()->query())->nextPageUrl() }}" class="button" title="Halaman Berikutnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </a>
+                    @else
+                        <span class="button disabled" title="Halaman Berikutnya">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
 </section>
 @endsection
