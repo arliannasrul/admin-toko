@@ -274,8 +274,8 @@
             <div class="theme-toggle-container">
                 <button class="theme-switch-btn" id="themeToggleBtn" type="button" aria-label="Toggle Theme">
                     <div class="theme-switch-track">
-                        <span class="theme-icon sun">☀️</span>
-                        <span class="theme-icon moon">🌙</span>
+                        <span class="theme-icon sun"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
+                        <span class="theme-icon moon"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span>
                         <div class="theme-switch-thumb"></div>
                     </div>
                     <span class="theme-text" id="themeToggleText">Mode Gelap</span>
@@ -283,40 +283,40 @@
             </div>
             <nav>
                 <a href="{{ route('dashboard') }}" @class(['active' => request()->routeIs('dashboard')])>
-                    <span style="font-size: 16px;">📊</span> Dashboard
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px; flex-shrink: 0;"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg> Dashboard
                 </a>
                 <a href="{{ route('items.index') }}" @class(['active' => request()->routeIs('items.*')])>
-                    <span style="font-size: 16px;">📦</span> Barang
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px; flex-shrink: 0;"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line><polygon points="12 22.08 12 12 3 6.92 3 17.08 12 22.08"></polygon><polygon points="12 12 21 6.92 21 17.08 12 22.08"></polygon><polygon points="12 1.92 21 6.92 12 12 3 6.92 12 1.92"></polygon><line x1="12" y1="22.08" x2="12" y2="12"></line></svg> Barang
                 </a>
                 <a href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])>
-                    <span style="font-size: 16px;">🔔</span> Notifikasi
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px; flex-shrink: 0;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> Notifikasi
                 </a>
                 {{-- Orders & CRM: untuk sales_staff, super_admin, dan guest (read-only) --}}
                 @if(Auth::user()->isSalesStaff() || Auth::user()->isSuperAdmin() || Auth::user()->role === 'guest')
                 <a href="{{ route('orders.index') }}" @class(['active' => request()->routeIs('orders.*')])>
-                    <span style="font-size: 16px;">🚚</span> Tracking & Orders
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px; flex-shrink: 0;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> Tracking & Orders
                 </a>
                 <a href="{{ route('crm.index') }}" @class(['active' => request()->routeIs('crm.*')])>
-                    <span style="font-size: 16px;">👥</span> CRM & Pelanggan
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px; flex-shrink: 0;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> CRM & Pelanggan
                 </a>
                 @endif
                 {{-- Reports: untuk warehouse_staff, super_admin, dan guest (read-only) --}}
                 @if(Auth::user()->isWarehouseStaff() || Auth::user()->isSuperAdmin() || Auth::user()->role === 'guest')
                 <a href="{{ route('reports.index') }}" @class(['active' => request()->routeIs('reports.*')])>
-                    <span style="font-size: 16px;">📈</span> Laporan
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px; flex-shrink: 0;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg> Laporan
                 </a>
                 @endif
                 {{-- User Management: hanya super_admin --}}
                 @if(Auth::user()->isSuperAdmin())
                 <a href="{{ route('users.index') }}" @class(['active' => request()->routeIs('users.*')])>
-                    <span style="font-size: 16px;">⚙️</span> Manajemen Pengguna
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px; flex-shrink: 0;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Manajemen Pengguna
                 </a>
                 @endif
             </nav>
             {{-- Buyer Website Link (Demo Switcher) --}}
             <div style="padding: 12px 14px 0; border-top: 1px solid var(--line); margin-top: 8px;">
                 <a href="https://mitraspace-buyer.vercel.app/" target="_blank" style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%); border: 1px solid rgba(249,115,22,0.25); border-radius: 8px; color: #ff9d42; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.25) 0%, rgba(249,115,22,0.18) 100%)'; this.style.borderColor='rgba(249,115,22,0.4)';" onmouseout="this.style.background='linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(249,115,22,0.1) 100%)'; this.style.borderColor='rgba(249,115,22,0.25)';">
-                    <span style="font-size: 16px;">🛍️</span> Ke Toko Buyer (Demo)
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg> Ke Toko Buyer (Demo)
                 </a>
                 @auth
                 <div class="user-profile" style="margin-top: 16px; border-top: 1px solid var(--line); padding-top: 16px;">
@@ -330,7 +330,7 @@
                         @endif
                         <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <strong class="profile-name">{{ Auth::user()->name }}</strong>
-                            <small style="display: block; font-size: 11px; color: #9fb1bd; margin-bottom: 4px;">{{ Auth::user()->email }}</small>
+                            <small class="profile-email">{{ Auth::user()->email }}</small>
                             @if (Auth::user()->isSuperAdmin())
                                 <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); border-radius: 4px; font-weight: 600;">Super Admin</span>
                             @elseif (Auth::user()->isWarehouseStaff())
@@ -338,7 +338,9 @@
                             @elseif (Auth::user()->isSalesStaff())
                                 <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 4px; font-weight: 600;">Staff Penjualan</span>
                             @elseif (Auth::user()->role === 'guest')
-                                <span style="display: inline-block; font-size: 9px; padding: 2px 6px; background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; font-weight: 600;">👁️ Guest (Demo)</span>
+                                <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 9px; padding: 2px 6px; background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 4px; font-weight: 600;">
+                                    <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Guest (Demo)
+                                </span>
                             @endif
                         </div>
                     </div>
@@ -394,7 +396,9 @@
             {{-- Already applied: show status --}}
             <div class="guest-toast pending" id="guestToast">
                 <button class="guest-toast-dismiss" onclick="dismissToast()" title="Tutup">✕</button>
-                <div class="guest-toast-icon">⏳</div>
+                <div class="guest-toast-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                </div>
                 <div class="guest-toast-title">Pengajuan Sedang Ditinjau</div>
                 <div class="guest-toast-desc">
                     Permintaan akses sebagai <strong>{{ $requestedRoleLabel }}</strong> sedang menunggu persetujuan dari <strong>Super Admin</strong>. Anda tetap dapat menjelajahi sistem dalam mode read-only.
@@ -408,7 +412,9 @@
             {{-- Not yet applied: show apply button --}}
             <div class="guest-toast" id="guestToast">
                 <button class="guest-toast-dismiss" onclick="dismissToast()" title="Tutup">✕</button>
-                <div class="guest-toast-icon">👁️</div>
+                <div class="guest-toast-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </div>
                 <div class="guest-toast-title">Anda Masuk Sebagai Guest</div>
                 <div class="guest-toast-desc" style="margin-bottom: 12px;">
                     Mode demo aktif — Anda dapat <strong>melihat semua fitur</strong> namun tidak dapat melakukan perubahan data. Pilih role dan ajukan akses:
@@ -422,7 +428,7 @@
                     </select>
                     <div class="guest-toast-actions">
                         <button type="submit" class="btn-apply-admin" id="applyAdminBtn" style="height: 36px; padding: 0 14px;">
-                            🚀 Ajukan Akses
+                            Ajukan Akses
                         </button>
                         <button type="button" class="btn-dismiss-soft" onclick="dismissToast()" style="height: 36px; padding: 0 14px;">Nanti</button>
                     </div>
@@ -456,7 +462,9 @@
     @if(session('guest_blocked'))
     <div class="modal-overlay active" id="guestBlockedModal">
         <div class="modal-box">
-            <span class="modal-icon">🚫</span>
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="#ef4444" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display: block; margin: 0 auto;"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+            </div>
             <h3 class="modal-title">Tindakan Dibatasi</h3>
             <p class="modal-text">
                 Sebagai <strong>Guest (Demo)</strong>, Anda tidak diperbolehkan melakukan penambahan, perubahan, atau penghapusan data di dashboard ini.

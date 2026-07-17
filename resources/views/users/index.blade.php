@@ -15,7 +15,7 @@
 @endphp
 @if ($pendingCount > 0)
     <div style="margin-bottom: 24px; padding: 16px 20px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; display: flex; align-items: center; gap: 14px;">
-        <span style="font-size: 22px; flex-shrink: 0;">🔔</span>
+        <span style="flex-shrink: 0; color: #fbbf24;"><svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
         <div>
             <strong style="display: block; color: #fbbf24; font-size: 0.95rem; margin-bottom: 2px;">
                 {{ $pendingCount }} Pengajuan Perubahan Role Baru Menunggu Persetujuan
@@ -75,8 +75,8 @@
                                 </div>
                             @endif
                             <div>
-                                <strong style="color: white; display: block; font-size: 14px;">
-                                    @if($isPendingApplicant) 🔔 @endif
+                                <strong style="color: var(--ink); display: block; font-size: 14px;">
+                                    @if($isPendingApplicant) <svg viewBox="0 0 24 24" width="13" height="13" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg> @endif
                                     {{ $user->name }}
                                 </strong>
                                 @if($user->id === Auth::id())
@@ -94,7 +94,7 @@
                         @elseif ($user->isSalesStaff())
                             <span class="badge" style="background: rgba(249, 115, 22, 0.1); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.2);">Staff Penjualan</span>
                         @elseif ($user->role === 'guest')
-                            <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2);">👁️ Guest</span>
+                            <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); display: inline-flex; align-items: center; gap: 4px;"><svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Guest</span>
                         @else
                             <span class="badge" style="background: rgba(148, 163, 184, 0.1); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.2);">{{ $user->role }}</span>
                         @endif
@@ -122,7 +122,7 @@
                                 <option value="guest" @selected(($requestedRole ?? $user->role) === 'guest')>Guest (Demo)</option>
                             </select>
                             <button type="submit" class="button primary" style="padding: 8px 16px; font-size: 13px; height: 38px; min-height: auto; {{ $isPendingApplicant ? 'background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 4px 14px rgba(245,158,11,0.3);' : '' }}">
-                                @if($isPendingApplicant) ✅ Approve @else Simpan @endif
+                                @if($isPendingApplicant) <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none" style="display:inline;vertical-align:middle;"><polyline points="20 6 9 17 4 12"></polyline></svg> Approve @else Simpan @endif
                             </button>
                         </form>
                     </td>

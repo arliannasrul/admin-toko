@@ -6,8 +6,8 @@
         <p class="eyebrow">Customer Detail Dashboard</p>
         <h1>Profil: {{ $customerName }}</h1>
     </div>
-    <a class="button secondary" href="{{ route('crm.index') }}">
-        ⬅️ Database Pelanggan
+    <a class="button secondary" href="{{ route('crm.index') }}" style="display: inline-flex; align-items: center; gap: 6px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="15 18 9 12 15 6"></polyline></svg> Database Pelanggan
     </a>
 </header>
 
@@ -39,13 +39,13 @@
                     <td style="font-weight: 600; color: var(--muted); border-bottom: none;">Segmentasi</td>
                     <td style="border-bottom: none;">
                         @if ($segment === 'VIP')
-                            <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);">🥇 VIP Customer</span>
+                            <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); display: inline-flex; align-items: center; gap: 4px;"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> VIP Customer</span>
                         @elseif ($segment === 'Loyal')
-                            <span class="badge" style="background: rgba(34, 211, 238, 0.15); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3);">🔁 Loyal Customer</span>
+                            <span class="badge" style="background: rgba(34, 211, 238, 0.15); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3); display: inline-flex; align-items: center; gap: 4px;"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2" fill="none"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg> Loyal Customer</span>
                         @elseif ($segment === 'At Risk')
-                            <span class="badge badge-cancelled">⚠️ At Risk (Inaktif)</span>
+                            <span class="badge badge-cancelled" style="display: inline-flex; align-items: center; gap: 4px;"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> At Risk (Inaktif)</span>
                         @else
-                            <span class="badge badge-pending">🆕 New Customer</span>
+                            <span class="badge badge-pending" style="display: inline-flex; align-items: center; gap: 4px;"><svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> New Customer</span>
                         @endif
                     </td>
                 </tr>
@@ -71,8 +71,8 @@
             </div>
         </div>
         <div style="margin-top: 20px;">
-            <a href="{{ route('crm.templates', ['order_id' => $orders->first()->id]) }}" class="button primary" style="width: 100%;">
-                💬 Kirim Pesan Follow Up Terakhir
+            <a href="{{ route('crm.templates', ['order_id' => $orders->first()->id]) }}" class="button primary" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg> Kirim Pesan Follow Up Terakhir
             </a>
         </div>
     </section>
@@ -133,8 +133,8 @@
                             Rp {{ number_format($orderGrandTotal, 0, ',', '.') }}
                         </td>
                         <td style="text-align: right;">
-                            <a href="{{ route('orders.show', $order->id) }}" class="button" style="padding: 6px 12px; min-height: auto; font-size: 0.85rem;">
-                                👁️ Lihat Detail
+                            <a href="{{ route('orders.show', $order->id) }}" class="button" style="padding: 6px 12px; min-height: auto; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 5px;">
+                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg> Lihat Detail
                             </a>
                         </td>
                     </tr>
@@ -258,8 +258,8 @@
                 <textarea name="description" rows="4" placeholder="Tuliskan secara lengkap detail keluhan dari customer dan solusi sementara yang direncanakan..." required></textarea>
             </div>
 
-            <button type="submit" class="button primary" style="width: 100%;">
-                💾 Simpan Keluhan Customer
+            <button type="submit" class="button primary" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Simpan Keluhan Customer
             </button>
         </form>
     </section>

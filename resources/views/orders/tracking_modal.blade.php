@@ -78,7 +78,7 @@
                             </small>
                         </div>
                         <div style="color: var(--muted); font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
-                            <span>📍</span> {{ $checkpoint['location'] }}
+                            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="10" r="3"></circle><path d="M12 2a8 8 0 0 0-8 8c0 5.4 7.05 11.5 7.35 11.76a1 1 0 0 0 1.3 0C12.95 21.5 20 15.4 20 10a8 8 0 0 0-8-8z"></path></svg> {{ $checkpoint['location'] }}
                         </div>
                     </div>
                 </div>
