@@ -1,6 +1,14 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            const activeTheme = savedTheme || systemTheme;
+            document.documentElement.setAttribute('data-theme', activeTheme);
+        })();
+    </script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ config('app.name') }}</title>
@@ -225,14 +233,49 @@
     </style>
 </head>
 <body>
-    <aside class="sidebar">
-        <div style="display: flex; flex-direction: column; gap: 4px;">
-            <div class="brand">
-                <span class="brand-mark">MS</span>
-                <div>
-                    <strong>MitraSpace</strong>
-                    <small>Seller Center</small>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="mobile-brand">
+            <span class="brand-mark" style="width: 32px; height: 32px; font-size: 0.95rem; border-radius: 6px; box-shadow: none;">MS</span>
+            <strong>MitraSpace</strong>
+        </div>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Buka Menu">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div style="display: flex; flex-direction: column; gap: 4px; height: 100%;">
+            <div class="brand" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <span class="brand-mark">MS</span>
+                    <div>
+                        <strong>MitraSpace</strong>
+                        <small>Seller Center</small>
+                    </div>
                 </div>
+                <!-- Close Button on Mobile Sidebar -->
+                <button id="sidebarCloseBtn" class="hamburger-btn" style="padding: 4px; margin-left: 10px;" aria-label="Tutup Menu">
+                    <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Theme Toggle Selector Button -->
+            <div class="theme-toggle-container">
+                <button class="theme-toggle-btn" id="themeToggleBtn" type="button">
+                    <span class="theme-icon">☀️</span>
+                    <span class="theme-text">Mode Terang</span>
+                </button>
             </div>
             <nav>
                 <a href="{{ route('dashboard') }}" @class(['active' => request()->routeIs('dashboard')])>
@@ -435,5 +478,64 @@
     </script>
     @endif
 
+    {{-- Mobile Nav & Theme Switcher Script --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar Drawer Toggle Function
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (hamburgerBtn && sidebar && sidebarOverlay) {
+                hamburgerBtn.addEventListener('click', function() {
+                    sidebar.classList.add('active');
+                    sidebarOverlay.classList.add('active');
+                });
+            }
+
+            function closeSidebar() {
+                if (sidebar && sidebarOverlay) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            }
+
+            if (sidebarCloseBtn) {
+                sidebarCloseBtn.addEventListener('click', closeSidebar);
+            }
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+
+            // Theme Toggle Function
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            if (themeToggleBtn) {
+                function updateThemeBtn(theme) {
+                    const themeIcon = themeToggleBtn.querySelector('.theme-icon');
+                    const themeText = themeToggleBtn.querySelector('.theme-text');
+                    if (theme === 'light') {
+                        themeIcon.textContent = '🌙';
+                        themeText.textContent = 'Mode Gelap';
+                    } else {
+                        themeIcon.textContent = '☀️';
+                        themeText.textContent = 'Mode Terang';
+                    }
+                }
+
+                // Initialize button state
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                updateThemeBtn(currentTheme);
+
+                // Click handler
+                themeToggleBtn.addEventListener('click', function() {
+                    const activeTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', activeTheme);
+                    localStorage.setItem('theme', activeTheme);
+                    updateThemeBtn(activeTheme);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
